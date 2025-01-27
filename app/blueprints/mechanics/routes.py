@@ -3,7 +3,7 @@ from app.blueprints.mechanics import   mechanics_bp
 from .schemas import mechanic_schema, mechanics_schema
 from marshmallow import ValidationError
 from app.models import Mechanic, db
-from sqlalchemy import select, delete
+from sqlalchemy import select
 
 @mechanics_bp.route('/', methods = ['GET'])
 def get_mechanics():

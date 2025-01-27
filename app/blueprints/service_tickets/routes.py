@@ -3,7 +3,7 @@ from app.blueprints.service_tickets import service_tickets_bp
 from .schemas import service_ticket_schema, service_tickets_schema, return_service_ticket_schema
 from marshmallow import ValidationError
 from app.models import ServiceTicket, Mechanic, db
-from sqlalchemy import select, delete
+from sqlalchemy import select
 
 
 @service_tickets_bp.route('/', methods = ['GET'])

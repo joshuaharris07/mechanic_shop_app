@@ -3,7 +3,7 @@ from app.blueprints.customers import   customers_bp
 from .schemas import customer_schema, customers_schema
 from marshmallow import ValidationError
 from app.models import Customer, db
-from sqlalchemy import select, delete
+from sqlalchemy import select
 
 @customers_bp.route('/', methods = ['GET'])
 def get_customers():
