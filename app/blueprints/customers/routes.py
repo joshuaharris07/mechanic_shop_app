@@ -4,8 +4,10 @@ from .schemas import customer_schema, customers_schema
 from marshmallow import ValidationError
 from app.models import Customer, db
 from sqlalchemy import select
+from app.extensions import cache
 
 @customers_bp.route('/', methods = ['GET'])
+@cache.cached(timeout=60) #Added cache to customers so that the information is more readily accessible to the shop as it wouldn't be updated very regularly.
 def get_customers():
     query = select(Customer)
     result = db.session.execute(query).scalars().all()

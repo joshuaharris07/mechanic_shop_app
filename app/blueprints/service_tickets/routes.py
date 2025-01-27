@@ -4,7 +4,7 @@ from .schemas import service_ticket_schema, service_tickets_schema, return_servi
 from marshmallow import ValidationError
 from app.models import ServiceTicket, Mechanic, db
 from sqlalchemy import select
-
+from app.extensions import cache
 
 @service_tickets_bp.route('/', methods = ['GET'])
 def get_service_tickets():
