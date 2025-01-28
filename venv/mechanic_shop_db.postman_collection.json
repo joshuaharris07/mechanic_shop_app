@@ -305,7 +305,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete Customer Copy",
+			"name": "Delete Mechanic",
 			"event": [
 				{
 					"listen": "test",
