@@ -7,7 +7,7 @@ from sqlalchemy import select
 from app.extensions import cache
 
 @mechanics_bp.route('/', methods = ['GET'])
-@cache.cached(timeout=60) #Added cache to mechanics so that the information is more readily accessible to the shop as it wouldn't need to be updated very regularly.
+@cache.cached(timeout=10) #Added cache to mechanics so that the information is more readily accessible to the shop as it wouldn't need to be updated very regularly.
 def get_mechanics():
     query = select(Mechanic)
     result = db.session.execute(query).scalars().all()
