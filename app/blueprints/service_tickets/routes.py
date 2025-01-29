@@ -5,12 +5,22 @@ from marshmallow import ValidationError
 from app.models import ServiceTicket, Mechanic, db
 from sqlalchemy import select
 from app.extensions import cache
+from app.utils.util import encode_token, token_required
+
 
 @service_tickets_bp.route('/', methods = ['GET'])
 def get_service_tickets():
     query = select(ServiceTicket)
     result = db.session.execute(query).scalars().all()
     return service_tickets_schema.jsonify(result), 200
+
+@service_tickets_bp.route('/my-tickets', methods = ['GET'])
+@token_required
+def get_tickets_by_customer(service_ticket_id):
+    query = select(ServiceTicket).where(ServiceTicket.customer_id == service_ticket_id)
+    service_tickets = db.session.execute(query).scalars().all()
+    return service_tickets_schema.jsonify(service_tickets), 200
+
 
 @service_tickets_bp.route("/", methods=["POST"])
 def create_service_ticket():
