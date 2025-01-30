@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from app.blueprints.service_tickets import service_tickets_bp
-from .schemas import service_ticket_schema, service_tickets_schema, return_service_ticket_schema
+from .schemas import service_ticket_schema, service_tickets_schema, return_service_ticket_schema, edit_service_ticket_schema
 from marshmallow import ValidationError
 from app.models import ServiceTicket, Mechanic, db
 from sqlalchemy import select
@@ -42,9 +42,47 @@ def create_service_ticket():
         if mechanic:
             new_service_ticket.mechanics.append(mechanic)
         else:
-            return jsonify({"message": "Invalid mechanic ID"})
+            return jsonify({"message": "Invalid mechanic ID"}), 400
         
     db.session.add(new_service_ticket)
     db.session.commit()
     
-    return return_service_ticket_schema.jsonify(new_service_ticket)
+    return return_service_ticket_schema.jsonify(new_service_ticket), 201
+
+
+@service_tickets_schema.route("/<int:service_ticket_id>", methods=['DELETE'])
+def delete_service_ticket(service_ticket_id):
+    query = select(ServiceTicket).where(ServiceTicket.id == service_ticket_id)
+    service_ticket = db.session.execute(query).scalars().first()
+
+    db.session.delete(service_ticket)
+    db.session.commit()
+    return jsonify({"message": f"Service ticket was successfully deleted: {service_ticket_id}"}), 200
+
+
+@service_tickets_schema.route("/<int:service_ticket_id>", methods=['PUT'])
+def edit_service_ticket(service_ticket_id):
+    try:
+        service_ticket_edits = edit_service_ticket_schema.load(request.json)
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+    
+    query = select(ServiceTicket).where(ServiceTicket.id == service_ticket_id)
+    service_ticket = db.session.execute(query).scalars().first()
+
+    for mechanic_id in service_ticket_edits['add_mechanic_ids']:
+        query = select(Mechanic).where(Mechanic.id == mechanic_id)
+        mechanic = db.session.execute(query).scalars().first()
+
+        if mechanic and mechanic not in service_ticket.mechanics:
+            service_ticket.mechanics.append(mechanic)
+
+    for mechanic_id in service_ticket_edits['remove_mechanic_ids']:
+        query = select(Mechanic).where(Mechanic.id == mechanic_id)
+        mechanic = db.session.execute(query).scalars().first()
+
+        if mechanic and mechanic not in service_ticket.mechanics:
+            service_ticket.mechanics.remove(mechanic)
+
+    db.session.commit()
+    return return_service_ticket_schema.jsonify(service_ticket)
