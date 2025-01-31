@@ -10,16 +10,30 @@ from app.utils.util import encode_token, token_required
 
 @service_tickets_bp.route('/', methods = ['GET'])
 def get_service_tickets():
-    query = select(ServiceTicket)
-    result = db.session.execute(query).scalars().all()
-    return service_tickets_schema.jsonify(result), 200
+    try: 
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(ServiceTicket)
+        service_tickets = db.paginate(query, page=page, per_page=per_page)
+        return service_tickets_schema.jsonify(service_tickets)
+    except:
+        query = select(ServiceTicket)
+        service_tickets = db.session.execute(query).scalars().all()
+        return service_tickets_schema.jsonify(service_tickets), 200
 
 @service_tickets_bp.route('/my-tickets', methods = ['GET'])
 @token_required
 def get_tickets_by_customer(service_ticket_id):
-    query = select(ServiceTicket).where(ServiceTicket.customer_id == service_ticket_id)
-    service_tickets = db.session.execute(query).scalars().all()
-    return service_tickets_schema.jsonify(service_tickets), 200
+    try: 
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(ServiceTicket).where(ServiceTicket.customer_id == service_ticket_id)
+        service_tickets = db.paginate(query, page=page, per_page=per_page)
+        return service_tickets_schema.jsonify(service_tickets)
+    except:
+        query = select(ServiceTicket).where(ServiceTicket.customer_id == service_ticket_id)
+        service_tickets = db.session.execute(query).scalars().all()
+        return service_tickets_schema.jsonify(service_tickets), 200
 
 
 @service_tickets_bp.route("/", methods=["POST"])
@@ -50,7 +64,7 @@ def create_service_ticket():
     return return_service_ticket_schema.jsonify(new_service_ticket), 201
 
 
-@service_tickets_schema.route("/<int:service_ticket_id>", methods=['DELETE'])
+@service_tickets_bp.route("/<int:service_ticket_id>", methods=['DELETE'])
 def delete_service_ticket(service_ticket_id):
     query = select(ServiceTicket).where(ServiceTicket.id == service_ticket_id)
     service_ticket = db.session.execute(query).scalars().first()
@@ -60,7 +74,7 @@ def delete_service_ticket(service_ticket_id):
     return jsonify({"message": f"Service ticket was successfully deleted: {service_ticket_id}"}), 200
 
 
-@service_tickets_schema.route("/<int:service_ticket_id>", methods=['PUT'])
+@service_tickets_bp.route("/<int:service_ticket_id>", methods=['PUT'])
 def edit_service_ticket(service_ticket_id):
     try:
         service_ticket_edits = edit_service_ticket_schema.load(request.json)

@@ -33,12 +33,20 @@ def login():
     else: 
         return jsonify({"message": "invalid email or password"})
 
+
 @customers_bp.route('/', methods = ['GET'])
-@cache.cached(timeout=10) #Added cache to customers so that the information is more readily accessible to the shop as it wouldn't be updated very regularly.
+# @cache.cached(timeout=10) #Added cache to customers so that the information is more readily accessible to the shop as it wouldn't be updated very regularly.
 def get_customers():
-    query = select(Customer)
-    result = db.session.execute(query).scalars().all()
-    return customers_schema.jsonify(result), 200
+    try: 
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Customer)
+        customers = db.paginate(query, page=page, per_page=per_page)
+        return customers_schema.jsonify(customers), 200
+    except:
+        query = select(Customer)
+        customers = db.session.execute(query).scalars().all()
+        return customers_schema.jsonify(customers), 200
 
 @customers_bp.route('/', methods = ['POST'])
 def add_customer():
@@ -86,11 +94,17 @@ def delete_customer(customer_id):
     return jsonify({"message": "Customer removed successfully"}), 200
 
 
-@customers_bp.route("/search", methods=['GET']) #TODO make sure this works as intended with finding customers
+@customers_bp.route("/search", methods=['GET'])
 def search_customer():
-    name = request.args.get("name")
-
-    query = select(Customer).where(Customer.name.like(f'%{name}%'))
-    customers = db.session.execute(query).scalars().all()
-
-    return customers_schema.jsonify(customers)
+    try: 
+        name = request.args.get("name")
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Customer).where(Customer.name.like(f'%{name}%'))
+        customers = db.paginate(query, page=page, per_page=per_page)
+        return customers_schema.jsonify(customers), 200
+    except:
+        name = request.args.get("name")
+        query = select(Customer).where(Customer.name.like(f'%{name}%'))
+        customers = db.session.execute(query).scalars().all()
+        return customers_schema.jsonify(customers)

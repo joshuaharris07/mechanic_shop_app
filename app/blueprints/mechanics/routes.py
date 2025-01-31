@@ -7,11 +7,18 @@ from sqlalchemy import select
 from app.extensions import cache
 
 @mechanics_bp.route('/', methods = ['GET'])
-@cache.cached(timeout=10) #Added cache to mechanics so that the information is more readily accessible to the shop as it wouldn't need to be updated very regularly.
+# @cache.cached(timeout=10) #Added cache to mechanics so that the information is more readily accessible to the shop as it wouldn't need to be updated very regularly.
 def get_mechanics():
-    query = select(Mechanic)
-    result = db.session.execute(query).scalars().all()
-    return mechanics_schema.jsonify(result), 200
+    try: 
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Mechanic)
+        mechanics = db.paginate(query, page=page, per_page=per_page)
+        return mechanics_schema.jsonify(mechanics)
+    except:
+        query = select(Mechanic)
+        result = db.session.execute(query).scalars().all()
+        return mechanics_schema.jsonify(result), 200
 
 @mechanics_bp.route('/', methods = ['POST'])
 def add_mechanic():
@@ -55,3 +62,13 @@ def delete_mechanic(mechanic_id):
     db.session.delete(mechanic)
     db.session.commit()
     return jsonify({"message": "Mechanic removed successfully"}), 200
+
+
+@mechanics_bp.route("/most-tickets", methods=['GET']) #TODO make sure this works by sorting the mechanics by number of tickets worked.
+def sort_mechanics_by_tickets():
+    query = select(Mechanic)
+    mechanics = db.session.execute(query).scalars().all()
+
+    mechanics.sort(key = lambda mechanic: len(mechanics.service_tickets), reverse=True)
+
+    return mechanics_schema.jsonify(mechanics)
