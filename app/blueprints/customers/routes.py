@@ -84,3 +84,13 @@ def delete_customer(customer_id):
     db.session.delete(customer)
     db.session.commit()
     return jsonify({"message": "Customer removed successfully"}), 200
+
+
+@customers_bp.route("/search", methods=['GET']) #TODO make sure this works as intended with finding customers
+def search_customer():
+    name = request.args.get("name")
+
+    query = select(Customer).where(Customer.name.like(f'%{name}%'))
+    customers = db.session.execute(query).scalars().all()
+
+    return customers_schema.jsonify(customers)
