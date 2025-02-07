@@ -21,7 +21,7 @@ service_inventory = db.Table(
     "service_inventory",
     Base.metadata,
     db.Column("ticket_id", db.ForeignKey("service_tickets.id")),
-    db.Column("inventory_id", db.ForeignKey("inventory.id"))
+    db.Column("part_id", db.ForeignKey("inventory.id"))
 )
 
 
