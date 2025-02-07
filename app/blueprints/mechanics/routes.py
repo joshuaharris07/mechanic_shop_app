@@ -64,11 +64,12 @@ def delete_mechanic(mechanic_id):
     return jsonify({"message": "Mechanic removed successfully"}), 200
 
 
-@mechanics_bp.route("/most-tickets", methods=['GET']) #TODO make sure this works by sorting the mechanics by number of tickets worked.
+@mechanics_bp.route("/most-tickets", methods=['GET'])
 def sort_mechanics_by_tickets():
     query = select(Mechanic)
     mechanics = db.session.execute(query).scalars().all()
 
-    mechanics.sort(key = lambda mechanic: len(mechanics.service_tickets), reverse=True)
+    print(mechanics)
+    mechanics.sort(key = lambda mechanic: len(mechanic.tickets), reverse=True)
 
     return mechanics_schema.jsonify(mechanics)

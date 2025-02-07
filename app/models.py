@@ -39,7 +39,7 @@ class Mechanic(Base):
     phone: Mapped[str] = mapped_column(db.String(15), nullable=False)
     salary: Mapped[float] = mapped_column(nullable=False)
 
-    tickets: Mapped[List["ServiceTicket"]] = db.relationship(secondary=service_mechanics)
+    tickets: Mapped[List["ServiceTicket"]] = db.relationship(secondary=service_mechanics, back_populates="mechanics")
 
 
 class ServiceTicket(Base):
