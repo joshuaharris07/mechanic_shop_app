@@ -17,7 +17,7 @@ class EditServiceTicketSchema(ma.Schema):
         fields = ("add_mechanic_ids", "remove_mechanic_ids")
 
 class AddPartServiceTicketSchema(ma.Schema):
-    add_part_id = fields.Int(required=True) #TODO make sure this works with adding a single part
+    add_part_id = fields.Int(required=True)
     class Meta:
         fields = ("add_part_id",)
 
