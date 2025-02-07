@@ -16,7 +16,7 @@ service_mechanics = db.Table(
     db.Column("mechanic_id", db.ForeignKey("mechanics.id"))
 )
 
-#TODO make sure this table works
+
 service_inventory = db.Table(
     "service_inventory",
     Base.metadata,
@@ -61,7 +61,7 @@ class ServiceTicket(Base):
 
     customer: Mapped["Customer"] = db.relationship(back_populates="service_tickets")
     mechanics: Mapped[List["Mechanic"]] = db.relationship(secondary=service_mechanics, back_populates="tickets")
-    parts: Mapped[List["Inventory"]] = db.relationship(secondary=service_inventory, back_populates="tickets") #TODO make sure inventory works
+    parts: Mapped[List["Inventory"]] = db.relationship(secondary=service_inventory, back_populates="tickets") 
 
 
 
