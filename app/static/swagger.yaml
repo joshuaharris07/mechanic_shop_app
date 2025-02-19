@@ -124,6 +124,78 @@ paths:
               message: "Successfully deleted customer <customer_id>."
 
 
+  /inventory:
+    post:
+      tags:
+        - Inventory
+      summary: "Endpoint to add a new part."
+      description: "Endpoint to add a new part in our Mechanic Shop system."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to create a new Part."
+          required: true
+          schema:
+            $ref: "#/definitions/CreatePartPayload"
+      responses:
+        201:
+          descriptions: "Successful Part Creation"
+          schema:
+            $ref: "#/definitions/CreatePartResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Front Bumper
+              price: 139.99
+
+    get:
+      tags:
+        - Inventory
+      summary: "Returns all Inventory"
+      description: "Endpoint to retrieve a list of all parts."
+      responses:
+        200:
+          description: "Retrieved Inventory Successfully"           
+          schema:
+            $ref: "#/definitions/AllInventory"   
+    
+    put: # # TODO how can I get this to reference the correct part? Also, same issue as customers.
+      tags:
+        - Inventory
+      summary: "Endpoint to update a part."
+      description: "Endpoint to update a part."
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: "Information required to update a Part."
+          required: true
+          schema: 
+            $ref: "#/definitions/UpdatePartPayload"
+          responses: 
+            200:
+              descriptions: "Successfully Updated Part"
+              schema: 
+                $ref: "#/definitions/UpdatePartResponse"
+              examples:
+                application/json:
+                  id: 1
+                  name: Front Bumper
+                  price: 139.99
+
+    delete: # TODO how can I get this to reference the correct part?
+      tags:
+        - Inventory
+      summary: "Enpoint to delete a part"
+      description: "Endpoint to delete a part."
+      responses:
+        200:
+          description: "Successfully Deleted Part"           
+          schema:
+            $ref: "#/definitions/DeletePartResponse"
+          examples:
+            application/json:
+              message: "Part was successfully deleted <part_id>."
+
 definitions: 
 
   LoginCredentials:
@@ -236,6 +308,79 @@ definitions:
 
 
   DeleteCustomerResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"   
+  
+
+  CreatePartPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+      
+    required:
+      - name
+      - price
+
+
+  CreatePartResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+
+  AllInventory:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        price:
+          type: "number"
+          format: "float"
+
+
+  UpdatePartPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+      
+    required:
+      - name
+      - price
+
+
+  UpdatePartResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+
+  DeletePartResponse:
     type: "object"
     properties:
       message:
