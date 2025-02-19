@@ -30,7 +30,7 @@ def add_mechanic():
     new_mechanic = Mechanic(name=mechanic_data['name'], phone=mechanic_data['phone'], email=mechanic_data['email'], salary=mechanic_data['salary'])
     db.session.add(new_mechanic)
     db.session.commit()
-    return jsonify({"message": "New mechanic added successfully"}), 201
+    return mechanic_schema.jsonify(new_mechanic), 201
 
 @mechanics_bp.route('/<int:mechanic_id>', methods = ['PUT'])
 def update_mechanic(mechanic_id):

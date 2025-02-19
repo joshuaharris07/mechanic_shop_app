@@ -58,7 +58,7 @@ def add_customer():
     new_customer = Customer(name=customer_data['name'], phone=customer_data['phone'], email=customer_data['email'], password=customer_data['password'])
     db.session.add(new_customer)
     db.session.commit()
-    return jsonify({"message": "New customer added successfully"}), 201
+    return customer_schema.jsonify(new_customer), 201
 
 @customers_bp.route('/', methods = ['PUT'])
 @token_required
