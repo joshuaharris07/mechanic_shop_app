@@ -158,13 +158,19 @@ paths:
           description: "Retrieved Inventory Successfully"           
           schema:
             $ref: "#/definitions/AllInventory"   
-    
-    put: # # TODO how can I get this to reference the correct part? Also, same issue as customers.
+  
+  /inventory/{part_id}:
+    put: # TODO Same issue as customers.
       tags:
         - Inventory
       summary: "Endpoint to update a part."
       description: "Endpoint to update a part."
       parameters: 
+        - in: "path"
+          name: "part_id"
+          required: true
+          type: "integer"
+          description: "The ID of the part to update."
         - in: "body"
           name: "body"
           description: "Information required to update a Part."
@@ -182,11 +188,17 @@ paths:
                   name: Front Bumper
                   price: 139.99
 
-    delete: # TODO how can I get this to reference the correct part?
+    delete:
       tags:
         - Inventory
       summary: "Enpoint to delete a part"
       description: "Endpoint to delete a part."
+      parameters:
+        - in: "path"
+          name: "part_id"
+          required: true
+          type: "integer"
+          description: "The ID of the part to update."
       responses:
         200:
           description: "Successfully Deleted Part"           
