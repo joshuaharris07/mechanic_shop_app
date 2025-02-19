@@ -78,7 +78,7 @@ def update_customer(customer_id):
         setattr(customer, field, value)
     
     db.session.commit()
-    return jsonify({"message": "Customer details updated successfully"}), 200
+    return customer_schema.jsonify(customer), 200
 
 @customers_bp.route('/', methods = ['DELETE'])
 @token_required
@@ -91,7 +91,7 @@ def delete_customer(customer_id):
     
     db.session.delete(customer)
     db.session.commit()
-    return jsonify({"message": "Customer removed successfully"}), 200
+    return jsonify({"message": "Successfully deleted customer {customer_id}"}), 200
 
 
 @customers_bp.route("/search", methods=['GET'])

@@ -66,4 +66,4 @@ def update_part(part_id):
         setattr(part, field, value)
     
     db.session.commit()
-    return jsonify({"message": "Part details updated successfully"}), 200
+    return inventory_schema.jsonify(part), 200

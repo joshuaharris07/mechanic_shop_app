@@ -49,7 +49,7 @@ def update_mechanic(mechanic_id):
         setattr(mechanic, field, value)
     
     db.session.commit()
-    return jsonify({"message": "Mechanic details updated successfully"}), 200
+    return mechanic_schema.jsonify(mechanic), 200
 
 @mechanics_bp.route('/<int:mechanic_id>', methods = ['DELETE'])
 def delete_mechanic(mechanic_id):
