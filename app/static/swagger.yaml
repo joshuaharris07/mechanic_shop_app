@@ -123,7 +123,7 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "int"
+        type: "integer"
       name:
         type: "string"
       email:
