@@ -123,6 +123,43 @@ paths:
             application/json:
               message: "Successfully deleted customer <customer_id>."
 
+  /customers/search:
+    get:
+      tags:
+        - Customers
+      summary: "Search for customers by name"
+      description: "Endpoint to search for customers by their name. Supports pagination with optional 'page' and 'per_page' query parameters."
+      parameters:
+        - name: name
+          in: query
+          description: "The name or part of the name to search for."
+          required: true
+          type: string
+        # - name: page
+        #   in: query
+        #   description: "The page number for pagination (optional)."
+        #   required: false
+        #   type: integer
+        # - name: per_page
+        #   in: query
+        #   description: "The number of results per page (optional)."
+        #   required: false
+        #   type: integer
+      responses:
+        200:
+          description: "Successfully retrieved matching customers."
+          schema:
+            $ref: "#/definitions/AllCustomers"
+          examples:
+            application/json:
+              - id: 1
+                name: "John Doe"
+                email: "johndoe@email.com"
+                phone: "1234567890"
+              - id: 2
+                name: "Jane Smith"
+                email: "janesmith@email.com"
+                phone: "0987654321"
 
   /inventory:
     post:
@@ -296,6 +333,35 @@ paths:
           examples:
             application/json:
               message: "Mechanic was successfully deleted <mechanic_id>."
+
+  /mechanics/most-tickets: #make sure this is working, do I have to change the schema?
+    get:
+      tags:
+        - Mechanics
+      summary: "Returns all Mechanics sorted by most tickets assigned"
+      description: "Endpoint to retrieve a list of all mechanics sorted by most tickets assigned."
+      responses:
+        200:
+          description: "Retrieved Mechanics Successfully"           
+          schema:
+            $ref: "#/definitions/SortedMechanics"
+          examples:
+            application/json:
+              - id: 1
+                name: John Mechanic
+                email: john@bodyshop.com
+                phone: 8889997777
+                salary: 72000
+                ticket_count: 7
+              - id: 2
+                name: Mike Mechanic
+                email: mike@bodyshop.com
+                phone: 7773331010
+                salary: 82000
+                ticket_count: 2
+
+
+  /service-tickets:
 
 definitions: 
 
@@ -542,6 +608,27 @@ definitions:
           format: "float"
 
 
+  SortedMechanics:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email: 
+          type: "string"
+        phone: 
+          type: "string"
+        salary:
+          type: "number"
+          format: "float"
+        ticket_count:
+          type: "integer"
+          description: "Number of tickets assigned to the mechanic"
+
+
   UpdateMechanicPayload:
     type: "object"
     properties:
@@ -583,3 +670,5 @@ definitions:
     properties:
       message:
         type: "string"   
+
+
