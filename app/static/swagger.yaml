@@ -198,7 +198,7 @@ paths:
           name: "part_id"
           required: true
           type: "integer"
-          description: "The ID of the part to update."
+          description: "The ID of the part to delete."
       responses:
         200:
           description: "Successfully Deleted Part"           
@@ -207,6 +207,95 @@ paths:
           examples:
             application/json:
               message: "Part was successfully deleted <part_id>."
+
+
+  /mechanics:
+    post:
+      tags:
+        - Mechanics
+      summary: "Endpoint to add a new mechanic."
+      description: "Endpoint to add a new mechanic in our Mechanic Shop system."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to create a new Mechanic."
+          required: true
+          schema:
+            $ref: "#/definitions/CreateMechanicPayload"
+      responses:
+        201:
+          descriptions: "Successful Mechanic Creation"
+          schema:
+            $ref: "#/definitions/CreateMechanicResponse"
+          examples:
+            application/json:
+              id: 1
+              name: John Mechanic
+              email: john@bodyshop.com
+              phone: 8889997777
+              salary: 72000
+
+    get:
+      tags:
+        - Mechanics
+      summary: "Returns all Mechanics"
+      description: "Endpoint to retrieve a list of all mechanics."
+      responses:
+        200:
+          description: "Retrieved Mechanics Successfully"           
+          schema:
+            $ref: "#/definitions/AllMechanics"   
+  
+  /mechanics/{mechanic_id}:
+    put: # TODO Same issue as customers.
+      tags:
+        - Mechanics
+      summary: "Endpoint to update a mechanic."
+      description: "Endpoint to update a mechanic."
+      parameters: 
+        - in: "path"
+          name: "mechanic_id"
+          required: true
+          type: "integer"
+          description: "The ID of the mechanic to update."
+        - in: "body"
+          name: "body"
+          description: "Information required to update a Mechanic."
+          required: true
+          schema: 
+            $ref: "#/definitions/UpdateMechanicPayload"
+          responses: 
+            200:
+              descriptions: "Successfully Updated Mechanic"
+              schema: 
+                $ref: "#/definitions/UpdateMechanicResponse"
+              examples:
+                application/json:
+                  id: 1
+                  name: John Mechanic
+                  email: john@bodyshop.com
+                  phone: 8889997777
+                  salary: 72000
+
+    delete:
+      tags:
+        - Mechanics
+      summary: "Enpoint to delete a mechanic"
+      description: "Endpoint to delete a mechanic."
+      parameters:
+        - in: "path"
+          name: "mechanic_id"
+          required: true
+          type: "integer"
+          description: "The ID of the mechanic to delete."
+      responses:
+        200:
+          description: "Successfully Deleted Mechanic"           
+          schema:
+            $ref: "#/definitions/DeleteMechanicResponse"
+          examples:
+            application/json:
+              message: "Mechanic was successfully deleted <mechanic_id>."
 
 definitions: 
 
@@ -393,6 +482,103 @@ definitions:
 
 
   DeletePartResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"   
+
+
+  CreateMechanicPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+      
+    required:
+      - name
+      - email
+      - phone
+      - salary
+
+
+  CreateMechanicResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+
+
+  AllMechanics:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        email: 
+          type: "string"
+        phone: 
+          type: "string"
+        salary:
+          type: "number"
+          format: "float"
+
+
+  UpdateMechanicPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+      
+    required:
+      - name
+      - email
+      - phone
+      - salary
+
+
+  UpdateMechanicResponse:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone: 
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+
+
+  DeleteMechanicResponse:
     type: "object"
     properties:
       message:
