@@ -2,7 +2,7 @@ from app.models import ServiceTicket
 from app.extensions import ma
 from marshmallow import fields
 
-class ServiceTicketSchema(ma.SQLAlchemyAutoSchema):
+class ServiceTicketSchema(ma.SQLAlchemyAutoSchema): #TODO when I get the service tickets it is sending me duplicate info.
     mechanics = fields.Nested("MechanicSchema", many=True)
     customer = fields.Nested("CustomerSchema")
     parts = fields.Nested("InventorySchema", many=True)
