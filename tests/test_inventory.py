@@ -49,13 +49,6 @@ class TestInventory(unittest.TestCase):
         response = self.client.delete('/inventory/1')
         self.assertEqual(response.status_code, 200)
         self.assertIn('Part was successfully deleted', response.json.get('message', ''))
-        # response2 = self.client.get('/inventory/')
-        # self.assertFalse
-
-        # Verify the part no longer exists in the database
-        # with self.app.app_context():
-        #     part = Inventory.query.get(1)
-        #     self.assertIsNone(part, "Part was not deleted from the database")
     
     def test_delete_nonexistent_part(self):
         response = self.client.delete('/inventory/2')
