@@ -1,2 +1,5 @@
 venv/
 __pycache__
+mechanics/__pycache__
+customers/__pycache__
+service_tickets/__pycache__
