@@ -44,9 +44,12 @@ def delete_part(part_id):
     query = select(Inventory).where(Inventory.id == part_id)
     part = db.session.execute(query).scalars().first()
 
-    db.session.delete(part)
-    db.session.commit()
-    return jsonify({"message": f"Part was successfully deleted: {part_id}"}), 200
+    if part:
+        db.session.delete(part)
+        db.session.commit()
+        return jsonify({"message": f"Part was successfully deleted: {part_id}"}), 200
+    else: 
+        return jsonify({"message": "Incorrect part id, part not found."}), 404
 
 
 @inventory_bp.route("/<int:part_id>", methods=['PUT'])
