@@ -80,7 +80,7 @@ paths:
           schema:
             $ref: "#/definitions/AllCustomers"   
     
-    put: # In the api/docs this functions but doesn't provide the curl and additional information confirming the changes took place.
+    put: #Make sure this is working
       tags:
         - Customers
       summary: "Endpoint to update a customer."
@@ -94,18 +94,18 @@ paths:
           required: true
           schema: 
             $ref: "#/definitions/UpdateCustomerPayload"
-          responses: 
-            200:
-              descriptions: "Successfully Updated Customer"
-              schema: 
-                $ref: "#/definitions/UpdateCustomerResponse"
-              examples:
-                application/json:
-                  id: 1
-                  name: Dohn Joe
-                  DOB: "9998889999"
-                  email: dohnj@email.com
-                  password: password123
+      responses: 
+        200:
+          descriptions: "Successfully Updated Customer"
+          schema: 
+            $ref: "#/definitions/UpdateCustomerResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Dohn Joe
+              DOB: "9998889999"
+              email: dohnj@email.com
+              password: password123
 
     delete:
       tags:
@@ -197,7 +197,7 @@ paths:
             $ref: "#/definitions/AllInventory"   
   
   /inventory/{part_id}:
-    put: # TODO Same issue as customers.
+    put:
       tags:
         - Inventory
       summary: "Endpoint to update a part."
@@ -214,16 +214,16 @@ paths:
           required: true
           schema: 
             $ref: "#/definitions/UpdatePartPayload"
-          responses: 
-            200:
-              descriptions: "Successfully Updated Part"
-              schema: 
-                $ref: "#/definitions/UpdatePartResponse"
-              examples:
-                application/json:
-                  id: 1
-                  name: Front Bumper
-                  price: 139.99
+      responses: 
+        200:
+          descriptions: "Successfully Updated Part"
+          schema: 
+            $ref: "#/definitions/UpdatePartResponse"
+          examples:
+            application/json:
+              id: 1
+              name: Front Bumper
+              price: 139.99
 
     delete:
       tags:
@@ -284,7 +284,7 @@ paths:
             $ref: "#/definitions/AllMechanics"   
   
   /mechanics/{mechanic_id}:
-    put: # TODO Same issue as customers.
+    put:
       tags:
         - Mechanics
       summary: "Endpoint to update a mechanic."
@@ -301,18 +301,18 @@ paths:
           required: true
           schema: 
             $ref: "#/definitions/UpdateMechanicPayload"
-          responses: 
-            200:
-              descriptions: "Successfully Updated Mechanic"
-              schema: 
-                $ref: "#/definitions/UpdateMechanicResponse"
-              examples:
-                application/json:
-                  id: 1
-                  name: John Mechanic
-                  email: john@bodyshop.com
-                  phone: 8889997777
-                  salary: 72000
+      responses: 
+        200:
+          descriptions: "Successfully Updated Mechanic"
+          schema: 
+            $ref: "#/definitions/UpdateMechanicResponse"
+          examples:
+            application/json:
+              id: 1
+              name: John Mechanic
+              email: john@bodyshop.com
+              phone: 8889997777
+              salary: 72000
 
     delete:
       tags:
@@ -362,6 +362,44 @@ paths:
 
 
   /service-tickets:
+    post:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to add a new service ticket."
+      description: "Endpoint to add a new service ticket in our Mechanic Shop system."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to create a new Service Ticket."
+          required: true
+          schema:
+            $ref: "#/definitions/CreateServiceTicketPayload"
+      responses:
+        201:
+          descriptions: "Successful Service Ticket Creation"
+          schema:
+            $ref: "#/definitions/CreateServiceTicketResponse"
+          examples:
+            application/json:
+              id: 1
+              vin: HCJ12365464243
+              service_date: 2012-12-15
+              service_desc: "Replace front bumper"
+              customer_id: 1
+              customer: 
+              mechanics:
+              parts:
+
+    get:
+      tags:
+        - Service Tickets
+      summary: "Returns all Service Tickets"
+      description: "Endpoint to retrieve a list of all service tickets."
+      responses:
+        200:
+          description: "Retrieved Service Tickets Successfully"           
+          schema:
+            $ref: "#/definitions/AllServiceTickets"
 
 definitions: 
 
@@ -672,3 +710,133 @@ definitions:
         type: "string"   
 
 
+  CreateServiceTicketPayload:
+    type: "object"
+    properties:
+      vin:
+        type: "string"
+      service_date: 
+        type: "string"
+      service_desc: 
+        type: "string"
+      customer_id:
+        type: "integer"
+      customer: #do the following three work?
+        type: "object"
+      mechanics:
+        type: "object"
+      parts: 
+        type: "object"
+      
+    required:
+      - vin
+      - service_date
+      - service_desc
+      - customer_id
+      - customer
+      - mechanics
+      - parts
+
+
+  CreateServiceTicketResponse:
+    type: "object"
+    properties:
+      vin:
+        type: "string"
+      service_date: 
+        type: "string"
+      service_desc: 
+        type: "string"
+      customer_id:
+        type: "integer"
+      customer: #do the following three work?
+        type: "object"
+      mechanics:
+        type: "object"
+      parts: 
+        type: "object"
+
+
+  AllServiceTickets:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+      vin:
+        type: "string"
+      service_date: 
+        type: "string"
+      service_desc: 
+        type: "string"
+      customer_id:
+        type: "integer"
+      # customer: #do the following three work?
+      #   type: "object"
+      # mechanics:
+      #   type: "object"
+      # parts: 
+      #   type: "object"
+
+
+  # SortedMechanics:
+  #   type: "array"
+  #   items:
+  #     type: "object"
+  #     properties:
+  #       id:
+  #         type: "integer"
+  #       name:
+  #         type: "string"
+  #       email: 
+  #         type: "string"
+  #       phone: 
+  #         type: "string"
+  #       salary:
+  #         type: "number"
+  #         format: "float"
+  #       ticket_count:
+  #         type: "integer"
+  #         description: "Number of tickets assigned to the mechanic"
+
+
+  # UpdateMechanicPayload:
+  #   type: "object"
+  #   properties:
+  #     name:
+  #       type: "string"
+  #     email: 
+  #       type: "string"
+  #     phone: 
+  #       type: "string"
+  #     salary:
+  #       type: "number"
+  #       format: "float"
+      
+  #   required:
+  #     - name
+  #     - email
+  #     - phone
+  #     - salary
+
+
+  # UpdateMechanicResponse:
+  #   type: "object"
+  #   properties:
+  #     id:
+  #       type: "integer"
+  #     name:
+  #       type: "string"
+  #     email: 
+  #       type: "string"
+  #     phone: 
+  #       type: "string"
+  #     salary:
+  #       type: "number"
+  #       format: "float"
+
+
+  # DeleteMechanicResponse:
+  #   type: "object"
+  #   properties:
+  #     message:
+  #       type: "string"   

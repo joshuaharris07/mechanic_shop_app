@@ -57,7 +57,7 @@ def delete_mechanic(mechanic_id):
     mechanic = db.session.execute(query).scalars().first()
 
     if mechanic == None:
-        return jsonify({"message": "Invalid mechanic ID"})
+        return jsonify({"message": "Invalid mechanic ID"}), 404
     
     db.session.delete(mechanic)
     db.session.commit()

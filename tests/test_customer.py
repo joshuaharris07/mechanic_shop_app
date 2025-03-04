@@ -37,3 +37,15 @@ class TestCustomer(unittest.TestCase):
         response = self.client.get('/customers/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['name'], "Jane Doe")
+    
+    # def test_update_customers(self): # TODO need to figure out the login and token.
+    #     customer_payload = {
+    #     "name": "Johnathan Doe",
+    #     "email": "john@email.com",
+    #     "phone": "3337772222",
+    #     "password": "1234"
+    #     }
+
+    #     response = self.client.put('/customers/', json=customer_payload)
+    #     self.assertEqual(response.status_code, 201)
+    #     self.assertEqual(response.json[0]['name'], "Johnathan Doe")
