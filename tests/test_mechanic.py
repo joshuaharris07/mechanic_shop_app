@@ -13,7 +13,7 @@ class TestMechanic(unittest.TestCase):
             mechanic = Mechanic(
                 name="John Mechanic",
                 email="john@bodyshop.com",
-                phone="337774444",
+                phone="3337774444",
                 salary=90000
             )
             db.session.add(mechanic)
@@ -25,7 +25,7 @@ class TestMechanic(unittest.TestCase):
         mechanic_payload = {
         "name": "Jane Mechanic",
         "email": "jane@bodyshop.com",
-        "phone": "337774444",
+        "phone": "3337774444",
         "salary": 70000
         }
 
@@ -39,18 +39,20 @@ class TestMechanic(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['name'], "John Mechanic")
 
-    def test_update_mechanic(self): # TODO change the route in blueprints to accept empty parts
+    def test_update_mechanic(self): 
         update_payload = {
             "name": "Bobby Mechanic",
             "email": "bobby@bodyshop.com",
-            "phone": "337774444",
-            "salary": 80000
+            "phone": "",
+            "salary": 90000,
         }
 
         response = self.client.put('/mechanics/1', json=update_payload)
+        print(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['name'], 'Bobby Mechanic') 
         self.assertEqual(response.json['email'], 'bobby@bodyshop.com')
+        self.assertEqual(response.json['phone'], '3337774444')
     
     def test_delete_mechanic(self):
         response = self.client.delete('/mechanics/1')
