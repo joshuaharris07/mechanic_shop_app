@@ -48,7 +48,6 @@ class TestMechanic(unittest.TestCase):
         }
 
         response = self.client.put('/mechanics/1', json=update_payload)
-        print(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['name'], 'Bobby Mechanic') 
         self.assertEqual(response.json['email'], 'bobby@bodyshop.com')
