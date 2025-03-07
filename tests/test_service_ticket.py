@@ -63,7 +63,6 @@ class TestMechanic(unittest.TestCase):
         }
 
         response = self.client.post('/service-tickets/', json=service_ticket_payload)
-        print(response.json)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json['vin'], "NEWVIN1234567890")
         self.assertEqual(response.json['service_desc'], "Replace windshield")
@@ -73,26 +72,30 @@ class TestMechanic(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['vin'], "VIN123456H123456")
 
-    # def test_update_mechanic(self): # TODO change the route in blueprints to accept empty parts
-    #     update_payload = {
-    #         "name": "Bobby Mechanic",
-    #         "email": "bobby@bodyshop.com",
-    #         "phone": "337774444",
-    #         "salary": 80000
-    #     }
+    def test_add_mechanic_to_ticket(self): 
+        update_payload = {
+            "add_mechanic_ids": [1],
+            "remove_mechanic_ids": []
+        }
 
-    #     response = self.client.put('/mechanics/1', json=update_payload)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(response.json['name'], 'Bobby Mechanic') 
-    #     self.assertEqual(response.json['email'], 'bobby@bodyshop.com')
+        response = self.client.put('/service-tickets/1', json=update_payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['mechanics'][0]['name'], "John Mechanic") 
+        self.assertEqual(response.json['service_date'], '2025-03-04')
     
-    # def test_delete_mechanic(self):
-    #     response = self.client.delete('/mechanics/1')
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn('Mechanic removed successfully', response.json.get('message', ''))
-    
-    # def test_delete_nonexistent_mechanic(self):
-    #     response = self.client.delete('/mechanics/10')
-    #     self.assertEqual(response.status_code, 404)
+    def test_add_mechanic_to_ticket(self):
+        update_payload = {
+            "add_part_id": 1,
+        }
+
+        response = self.client.put('/service-tickets/1', json=update_payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['parts'][0]['name'], "Front Bumper") 
+        self.assertEqual(response.json['service_date'], '2025-03-04')
+
+    def test_delete_service_ticket(self):
+        response = self.client.delete('/service-tickets/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Service ticket was successfully deleted', response.json.get('message', ''))
 
 # python -m unittest discover tests
