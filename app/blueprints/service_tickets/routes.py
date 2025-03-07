@@ -49,13 +49,15 @@ def create_service_ticket():
         customer_id=service_ticket_data["customer_id"],
         )
     
-    for mechanic_id in service_ticket_data["mechanic_ids"]:
-        query = select(Mechanic).where(Mechanic.id==mechanic_id)
-        mechanic = db.session.execute(query).scalar()
-        if mechanic:
-            new_service_ticket.mechanics.append(mechanic)
-        else:
-            return jsonify({"message": "Invalid mechanic ID"}), 400
+    if "mechanic_ids" in request.json:
+
+        for mechanic_id in service_ticket_data["mechanic_ids"]:
+            query = select(Mechanic).where(Mechanic.id==mechanic_id)
+            mechanic = db.session.execute(query).scalar()
+            if mechanic:
+                new_service_ticket.mechanics.append(mechanic)
+            else:
+                return jsonify({"message": "Invalid mechanic ID"}), 400
         
     db.session.add(new_service_ticket)
     db.session.commit()
