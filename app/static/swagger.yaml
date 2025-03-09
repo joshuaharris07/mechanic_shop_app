@@ -436,6 +436,21 @@ paths:
             application/json:
               message: "Service Ticket was successfully deleted <service_ticket_id>."
 
+  /service-tickets/my-tickets:
+    get:
+      tags:
+        - Service Tickets
+      summary: "Returns all Service Tickets for a specific Customer"
+      description: "Endpoint to retrieve all Service Tickets for a specific Customer"
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Retrieved Service Tickets Successfully"           
+          schema:
+            $ref: "#/definitions/AllServiceTickets"
+
+
 definitions: 
 
   LoginCredentials:
