@@ -324,7 +324,7 @@ paths:
             application/json:
               message: "Mechanic was successfully deleted <mechanic_id>."
 
-  /mechanics/most-tickets: # TODO make sure this is working, do I have to change the schema?
+  /mechanics/most-tickets:
     get:
       tags:
         - Mechanics
@@ -339,15 +339,9 @@ paths:
             application/json:
               - id: 1
                 name: John Mechanic
-                email: john@bodyshop.com
-                phone: 8889997777
-                salary: 72000
                 ticket_count: 7
               - id: 2
                 name: Mike Mechanic
-                email: mike@bodyshop.com
-                phone: 7773331010
-                salary: 82000
                 ticket_count: 2
 
 
@@ -687,7 +681,7 @@ definitions:
           format: "float"
 
 
-  SortedMechanics: # Make sure this is working
+  SortedMechanics:
     type: "array"
     items:
       type: "object"
@@ -696,13 +690,6 @@ definitions:
           type: "integer"
         name:
           type: "string"
-        email: 
-          type: "string"
-        phone: 
-          type: "string"
-        salary:
-          type: "number"
-          format: "float"
         ticket_count:
           type: "integer"
           description: "Number of tickets assigned to the mechanic"
@@ -850,7 +837,6 @@ definitions:
       parts:
         type: "object"
       
-
 
   DeleteServiceTicketResponse:
     type: "object"
