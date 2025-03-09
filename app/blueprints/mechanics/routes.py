@@ -46,7 +46,7 @@ def update_mechanic(mechanic_id):
         return jsonify(err.messages), 400
 
     for field, value in mechanic_data.items():
-        if value is not None:
+        if value not in [None, ""]:
             setattr(mechanic, field, value)
     
     db.session.commit()
