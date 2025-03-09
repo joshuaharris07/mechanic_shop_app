@@ -34,16 +34,25 @@ class TestInventory(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['name'], "Front Bumper")
 
-    def test_update_part(self): # TODO change the route in blueprints to accept empty parts
+    def test_update_part(self): 
         update_payload = {
-            "name": "Rear Bumper",
-            "price": 139.50
+            "name": "Rear Bumper"
         }
 
         response = self.client.put('/inventory/1', json=update_payload)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['name'], 'Rear Bumper') 
         self.assertEqual(response.json['price'], 139.50)
+
+    def test_update_part2(self): 
+        update_payload = {
+            "price": 205.49
+        }
+
+        response = self.client.put('/inventory/1', json=update_payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['name'], 'Front Bumper') 
+        self.assertEqual(response.json['price'], 205.49)
     
     def test_delete_part(self):
         response = self.client.delete('/inventory/1')
@@ -53,3 +62,5 @@ class TestInventory(unittest.TestCase):
     def test_delete_nonexistent_part(self):
         response = self.client.delete('/inventory/2')
         self.assertEqual(response.status_code, 404)
+
+# python -m unittest discover tests

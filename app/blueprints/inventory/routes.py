@@ -61,12 +61,13 @@ def update_part(part_id):
         return jsonify({"message": "Invalid part ID"})
     
     try:
-        part_data = inventory_schema.load(request.json)
+        part_data = inventory_schema.load(request.json, partial=True)
     except ValidationError as err:
         return jsonify(err.messages), 400
 
     for field, value in part_data.items():
-        setattr(part, field, value)
+        if value is not None:
+            setattr(part, field, value)
     
     db.session.commit()
     return inventory_schema.jsonify(part), 200
