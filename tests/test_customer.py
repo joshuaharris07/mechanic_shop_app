@@ -92,4 +92,32 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Successfully deleted customer', response.json.get('message', ''))
 
+    
+    def test_search_customer(self):
+        # Add a few customers for testing search function
+        with self.app.app_context():
+            db.session.add_all([
+                Customer(name="Bill Smith", email="jane@gmail.com", phone="1112223333", password='1234'),
+                Customer(name="John Doe", email="john@email.com", phone="3337772222", password='1234'),
+                Customer(name="Janet Barney", email="janet@email.com", phone="4445556666", password='1234')
+            ])
+            db.session.commit()
+
+        response = self.client.get('/customers/search?name=Bill')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json), 1)
+        self.assertEqual(response.json[0]['name'], 'Bill Smith')
+
+        # Testing search with pagination
+        response = self.client.get('/customers/search?name=J&page=1&per_page=5')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json), 3)
+        self.assertTrue(any(customer['name'] == 'Janet Barney' for customer in response.json))
+        self.assertTrue(any(customer['name'] == 'John Doe' for customer in response.json))
+
+        # Testing search with nothing found
+        response = self.client.get('/customers/search?name=NonExistent')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json), 0)
+
 # python -m unittest discover tests
