@@ -80,7 +80,7 @@ paths:
           schema:
             $ref: "#/definitions/AllCustomers"   
     
-    put: #Make sure this is working
+    put:
       tags:
         - Customers
       summary: "Endpoint to update a customer."
@@ -135,16 +135,6 @@ paths:
           description: "The name or part of the name to search for."
           required: true
           type: string
-        # - name: page
-        #   in: query
-        #   description: "The page number for pagination (optional)."
-        #   required: false
-        #   type: integer
-        # - name: per_page
-        #   in: query
-        #   description: "The number of results per page (optional)."
-        #   required: false
-        #   type: integer
       responses:
         200:
           description: "Successfully retrieved matching customers."
@@ -334,7 +324,7 @@ paths:
             application/json:
               message: "Mechanic was successfully deleted <mechanic_id>."
 
-  /mechanics/most-tickets: #make sure this is working, do I have to change the schema?
+  /mechanics/most-tickets: # TODO make sure this is working, do I have to change the schema?
     get:
       tags:
         - Mechanics
@@ -400,6 +390,57 @@ paths:
           description: "Retrieved Service Tickets Successfully"           
           schema:
             $ref: "#/definitions/AllServiceTickets"
+
+
+  /service-tickets/{service_ticket_id}:
+    put:
+      tags:
+        - Service Tickets
+      summary: "Endpoint to edit mechanics or parts on a service ticket."
+      description: "Endpoint to edit mechanics or parts on a service ticket."
+      parameters: 
+        - in: "path"
+          name: "service_ticket_id"
+          required: true
+          type: "integer"
+          description: "The ID of the service ticket to update."
+        - in: "body"
+          name: "body"
+          description: "Information required to update a Service Ticket."
+          required: true
+          schema: 
+            $ref: "#/definitions/UpdateServiceTicketPayload"
+      responses: 
+        200:
+          descriptions: "Successfully Updated Service Ticket"
+          schema: 
+            $ref: "#/definitions/UpdateServiceTicketResponse"
+          examples:
+            application/json:
+              id: 1
+              add_mechanic_ids: [1]
+              remove_mechanic_ids: []
+              add_part_id: 2
+
+    delete:
+      tags:
+        - Service Tickets
+      summary: "Enpoint to delete a service ticket"
+      description: "Endpoint to delete a service ticket."
+      parameters:
+        - in: "path"
+          name: "service_ticket_id"
+          required: true
+          type: "integer"
+          description: "The ID of the service ticket to delete."
+      responses:
+        200:
+          description: "Successfully Deleted Service Ticket"           
+          schema:
+            $ref: "#/definitions/DeleteServiceTicketResponse"
+          examples:
+            application/json:
+              message: "Service Ticket was successfully deleted <service_ticket_id>."
 
 definitions: 
 
@@ -646,7 +687,7 @@ definitions:
           format: "float"
 
 
-  SortedMechanics:
+  SortedMechanics: # Make sure this is working
     type: "array"
     items:
       type: "object"
@@ -721,21 +762,16 @@ definitions:
         type: "string"
       customer_id:
         type: "integer"
-      customer: #do the following three work?
-        type: "object"
-      mechanics:
-        type: "object"
-      parts: 
-        type: "object"
+      mechanic_ids:     # This isn't required for creating a service ticket. Not listed in required.
+        type: "array"
+        items:
+          type: "integer"
       
     required:
       - vin
       - service_date
       - service_desc
       - customer_id
-      - customer
-      - mechanics
-      - parts
 
 
   CreateServiceTicketResponse:
@@ -749,11 +785,11 @@ definitions:
         type: "string"
       customer_id:
         type: "integer"
-      customer: #do the following three work?
+      customer: 
         type: "object"
       mechanics:
         type: "object"
-      parts: 
+      parts:
         type: "object"
 
 
@@ -770,73 +806,54 @@ definitions:
         type: "string"
       customer_id:
         type: "integer"
-      # customer: #do the following three work?
-      #   type: "object"
-      # mechanics:
-      #   type: "object"
-      # parts: 
-      #   type: "object"
+      customer: 
+        type: "object"
+      mechanics:
+        type: "object"
+      parts:
+        type: "object"
 
 
-  # SortedMechanics:
-  #   type: "array"
-  #   items:
-  #     type: "object"
-  #     properties:
-  #       id:
-  #         type: "integer"
-  #       name:
-  #         type: "string"
-  #       email: 
-  #         type: "string"
-  #       phone: 
-  #         type: "string"
-  #       salary:
-  #         type: "number"
-  #         format: "float"
-  #       ticket_count:
-  #         type: "integer"
-  #         description: "Number of tickets assigned to the mechanic"
+  UpdateServiceTicketPayload:
+    type: "object"
+    properties:
+      add_mechanic_ids:
+        type: "array"
+        items:
+          type: "integer"
+      remove_mechanic_ids: 
+        type: "array"
+        items:
+          type: "integer"
+      add_part_id: 
+        type: "integer"
+    required: []
 
 
-  # UpdateMechanicPayload:
-  #   type: "object"
-  #   properties:
-  #     name:
-  #       type: "string"
-  #     email: 
-  #       type: "string"
-  #     phone: 
-  #       type: "string"
-  #     salary:
-  #       type: "number"
-  #       format: "float"
+  UpdateServiceTicketResponse:
+    type: "object"
+    items:
+      type: "object"
+      properties:
+      vin:
+        type: "string"
+      service_date: 
+        type: "string"
+      service_desc: 
+        type: "string"
+      customer_id:
+        type: "integer"
+      customer: 
+        type: "object"
+      mechanics:
+        type: "object"
+      parts:
+        type: "object"
       
-  #   required:
-  #     - name
-  #     - email
-  #     - phone
-  #     - salary
 
 
-  # UpdateMechanicResponse:
-  #   type: "object"
-  #   properties:
-  #     id:
-  #       type: "integer"
-  #     name:
-  #       type: "string"
-  #     email: 
-  #       type: "string"
-  #     phone: 
-  #       type: "string"
-  #     salary:
-  #       type: "number"
-  #       format: "float"
-
-
-  # DeleteMechanicResponse:
-  #   type: "object"
-  #   properties:
-  #     message:
-  #       type: "string"   
+  DeleteServiceTicketResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"   
