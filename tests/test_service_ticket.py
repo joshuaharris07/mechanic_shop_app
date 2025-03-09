@@ -1,5 +1,5 @@
 from app import create_app
-from app.models import db, Mechanic, ServiceTicket, Inventory
+from app.models import db, Mechanic, ServiceTicket, Inventory, Customer
 from datetime import datetime
 import unittest
 
@@ -10,7 +10,16 @@ class TestMechanic(unittest.TestCase):
             db.drop_all()
             db.create_all()
 
-            # Adding a mechanic, part, and service ticket for use during GET, PUT, and DELETE tests.
+            # Adding a mechanic, customer, part, and service ticket for use during GET, PUT, and DELETE tests.
+            customer = Customer(
+                name="Jane Doe",
+                email="jane@email.com",
+                phone="1112223333",
+                password="1234"
+            )
+            db.session.add(customer)
+            db.session.commit()
+
             mechanic = Mechanic(
                 name="John Mechanic",
                 email="john@bodyshop.com",
@@ -62,6 +71,22 @@ class TestMechanic(unittest.TestCase):
         response = self.client.get('/service-tickets/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['vin'], "VIN123456H123456")
+
+
+    def test_login_cutomer(self): # need this to access the service tickets by customer route.
+        credentials = {
+            "email": "jane@email.com",
+            "password": "1234"
+        }
+        response = self.client.post('/customers/login', json=credentials)
+        return response.json['token']
+
+    def test_service_tickets_by_customer(self):
+        headers = {'Authorization': "Bearer " + self.test_login_cutomer()}
+        response = self.client.get('/service-tickets/my-tickets', headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json), 1)
+        self.assertEqual(response.json[0]['service_desc'], "Replace front bumper")
 
     def test_add_mechanic_to_ticket(self): 
         update_payload = {
