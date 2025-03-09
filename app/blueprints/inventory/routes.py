@@ -66,7 +66,7 @@ def update_part(part_id):
         return jsonify(err.messages), 400
 
     for field, value in part_data.items():
-        if value is not None:
+        if value not in [None, ""]:
             setattr(part, field, value)
     
     db.session.commit()
