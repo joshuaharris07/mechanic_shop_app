@@ -75,7 +75,8 @@ def update_customer(customer_id):
         return jsonify(err.messages), 400
 
     for field, value in customer_data.items():
-        setattr(customer, field, value)
+        if value not in [None, ""]:
+            setattr(customer, field, value)
     
     db.session.commit()
     return customer_schema.jsonify(customer), 200
