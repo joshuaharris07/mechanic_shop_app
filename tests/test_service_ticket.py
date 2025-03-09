@@ -1,5 +1,5 @@
 from app import create_app
-from app.models import db, Mechanic, Customer, ServiceTicket, Inventory
+from app.models import db, Mechanic, ServiceTicket, Inventory
 from datetime import datetime
 import unittest
 
@@ -10,7 +10,7 @@ class TestMechanic(unittest.TestCase):
             db.drop_all()
             db.create_all()
 
-            # Adding a mechanic, customer, part, and service ticket for use during GET, PUT, and DELETE tests.
+            # Adding a mechanic, part, and service ticket for use during GET, PUT, and DELETE tests.
             mechanic = Mechanic(
                 name="John Mechanic",
                 email="john@bodyshop.com",
@@ -18,15 +18,6 @@ class TestMechanic(unittest.TestCase):
                 salary=90000
             )
             db.session.add(mechanic)
-            db.session.commit()
-
-            customer = Customer(
-                name="Jane Doe",
-                email="jane@email.com",
-                phone="1112223333",
-                password="1234"
-            )
-            db.session.add(customer)
             db.session.commit()
 
             part = Inventory(
