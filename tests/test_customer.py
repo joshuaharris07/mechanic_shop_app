@@ -1,6 +1,5 @@
 from app import create_app
 from app.models import db, Customer
-from datetime import datetime
 import unittest
 
 class TestCustomer(unittest.TestCase):
@@ -19,7 +18,6 @@ class TestCustomer(unittest.TestCase):
             )
             db.session.add(customer)
             db.session.commit()
-
         self.client = self.app.test_client()
     
 
@@ -74,16 +72,24 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['name'], "Jane Doe")
     
-    # def test_update_customers(self): # TODO need to figure out the login and token.
-    #     customer_payload = {
-    #     "name": "Johnathan Doe",
-    #     "email": "john@email.com",
-    #     "phone": "3337772222",
-    #     "password": "1234"
-    #     }
+    def test_update_customers(self):
+        customer_payload = {
+        "name": "Johnathan Doe",
+        "email": "john@email.com",
+        "phone": "3337772222",
+        "password": "1234"
+        }
 
-    #     response = self.client.put('/customers/', json=customer_payload)
-    #     self.assertEqual(response.status_code, 201)
-    #     self.assertEqual(response.json[0]['name'], "Johnathan Doe")
+        headers = {'Authorization': "Bearer " + self.test_login_cutomer()}
+
+        response = self.client.put('/customers/', json=customer_payload, headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['name'], "Johnathan Doe")
+
+    def test_delete_customers(self):
+        headers = {'Authorization': "Bearer " + self.test_login_cutomer()}
+        response = self.client.delete('/customers/', headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Successfully deleted customer', response.json.get('message', ''))
 
 # python -m unittest discover tests
