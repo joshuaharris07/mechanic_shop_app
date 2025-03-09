@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from app.blueprints.service_tickets import service_tickets_bp
-from .schemas import service_ticket_schema, service_tickets_schema, return_service_ticket_schema, edit_service_ticket_schema, add_part_service_ticket_schema
+from .schemas import service_ticket_schema, service_tickets_schema, return_service_ticket_schema, edit_service_ticket_schema
 from marshmallow import ValidationError
 from app.models import Inventory, ServiceTicket, Mechanic, db
 from sqlalchemy import select
@@ -84,10 +84,9 @@ def edit_service_ticket(service_ticket_id):
             return jsonify({"message": "Service ticket not found"}), 404
         
         request_data = request.json
+        service_ticket_edits = edit_service_ticket_schema.load(request_data)
 
-        if 'add_mechanic_ids' in request_data:
-            service_ticket_edits = edit_service_ticket_schema.load(request_data)
-
+        if 'add_mechanic_ids' in service_ticket_edits and service_ticket_edits['add_mechanic_ids']:
             for mechanic_id in service_ticket_edits['add_mechanic_ids']:
                 query = select(Mechanic).where(Mechanic.id == mechanic_id)
                 mechanic = db.session.execute(query).scalars().first()
@@ -95,6 +94,7 @@ def edit_service_ticket(service_ticket_id):
                 if mechanic and mechanic not in service_ticket.mechanics:
                     service_ticket.mechanics.append(mechanic)
 
+        if 'remove_mechanic_ids' in service_ticket_edits and service_ticket_edits['remove_mechanic_ids']:
             for mechanic_id in service_ticket_edits['remove_mechanic_ids']:
                 query = select(Mechanic).where(Mechanic.id == mechanic_id)
                 mechanic = db.session.execute(query).scalars().first()
@@ -102,16 +102,15 @@ def edit_service_ticket(service_ticket_id):
                 if mechanic and mechanic in service_ticket.mechanics:
                     service_ticket.mechanics.remove(mechanic)
         
-        elif 'add_part_id' in request_data:
-            service_ticket_edits = add_part_service_ticket_schema.load(request_data)
+        if 'add_part_id' in service_ticket_edits and service_ticket_edits['add_part_id']:
             query = select(Inventory).where(Inventory.id == service_ticket_edits['add_part_id'])
             part = db.session.execute(query).scalars().first()
 
             if part and part not in service_ticket.parts:
                 service_ticket.parts.append(part)
         
-        else:
-            return jsonify ({"message": "Invalid request"}), 400
+        if not any(key in request_data for key in ['add_mechanic_ids', 'remove_mechanic_ids', 'add_part_id']):
+            return jsonify({"message": "Invalid request, no changes to update"}), 400
 
         db.session.commit()
         return return_service_ticket_schema.jsonify(service_ticket)
