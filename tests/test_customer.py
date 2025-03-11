@@ -30,7 +30,6 @@ class TestCustomer(unittest.TestCase):
         response = self.client.post('/customers/login', json=credentials)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['status'], 'success')
-        response.json['token']
         return response.json['token']
     
 

@@ -117,13 +117,12 @@ class TestMechanic(unittest.TestCase):
 
         response = self.client.get('/mechanics/most-tickets')
         self.assertEqual(response.status_code, 200)
-        data = response.json
 
         # Make sure the first two are Alice and Bob
-        self.assertEqual(data[0]['name'], 'Alice')
-        self.assertEqual(data[0]['email'], 'alice@bodyshop.com')
+        self.assertEqual(response.json[0]['name'], 'Alice')
+        self.assertEqual(response.json[0]['email'], 'alice@bodyshop.com')
 
-        self.assertEqual(data[1]['name'], 'Bob')
-        self.assertEqual(data[1]['salary'], 87000)
+        self.assertEqual(response.json[1]['name'], 'Bob')
+        self.assertEqual(response.json[1]['salary'], 87000)
 
 # python -m unittest discover tests
