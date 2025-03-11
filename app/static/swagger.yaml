@@ -261,6 +261,7 @@ paths:
               email: john@bodyshop.com
               phone: 8889997777
               salary: 72000
+              ticket_count: 0
 
     get:
       tags:
@@ -303,6 +304,7 @@ paths:
               email: john@bodyshop.com
               phone: 8889997777
               salary: 72000
+              ticket_count: 0
 
     delete:
       tags:
@@ -694,6 +696,8 @@ definitions:
         salary:
           type: "number"
           format: "float"
+        ticket_count:
+          type: "string"
 
 
   SortedMechanics:
